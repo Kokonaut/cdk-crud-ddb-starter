@@ -42,7 +42,8 @@ Setup is very simple. Assuming you already have an AWS account and credentials s
 
 * Clone repository
 * cd into root of repo
-* ```
+* 
+```
 npm install
 chmod +X buildDeployPkg.sh
 npm run build
