@@ -9,46 +9,49 @@ import { handler as deleteHandler } from './delete';
 
 exports.main = async (event: any = {}, context: any = {}): Promise<any> => {
   try {
-    console.log("DEV");
-    console.log(event.body);
 
-    var method = event.httpMethod;
-
-    // Get itemID, if present
-    var itemID = event.path.startsWith('/') ? event.path.substring(1) : event.path;
+    // Due to API Gateway Integrations, we trust event.path to be either:
+    //   * /contacts/
+    //   * /contacts/{itemID}
+    const method = event.httpMethod;
 
     if (method === "GET") {
-      // GET / to get the names of all widgets
-      if (event.path === "/") {
+      // GET /contacts/ to get the names of all widgets
+      if (event.path === "/contacts/" || event.path === "/contacts") {
         return getAllHandler();
       }
 
-      // GET /ID to get an item of ID
+      // GET /contacts/ID/ to get an item of ID
+      const itemID = event.path.substring(1);
       if (itemID) {
         return getHandler(event);
       }
     }
 
     if (method === "POST") {
+      // POST /contacts/ to create a contact
       return createHandler(event);
     }
 
     if (method === "PUT") {
+      // PUT /contacts/ to update a contact
       return updateHandler(event);
     }
 
     if (method === "DELETE") {
+      // DELETE /contacts/ to delete a contact
       return deleteHandler(event);
     }
 
-    // We got something besides a GET, POST, or DELETE
+    // In case we got something besides a GET, POST, PUT, or DELETE
+    // Should not be the case, since API Gateway is predefined
     return {
       statusCode: 400,
       headers: {},
-      body: "We only accept GET, POST, and DELETE, not " + method
+      body: "We only accept GET, POST, PUT, and DELETE, not " + method
     };
   } catch (error) {
-    var body = error.stack || JSON.stringify(error, null, 2);
+    const body = error.stack || JSON.stringify(error, null, 2);
     return {
       statusCode: 400,
       headers: {},

@@ -12,14 +12,16 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   const item = typeof event.body == 'object' ? event.body : JSON.parse(event.body);
 
-  let _updateExpression = 'set ';
-  let _valuesMap = new Map<String, any>();
+  let _updateExpression: string[] = [];
+  let _valuesMap = {};
   let i = 0;
 
   for (let [k, v] of Object.entries(item)) {
     let valueVar = `:v${i}`;
-    _updateExpression += `${k} = ${valueVar}`;
-    _valuesMap.set(valueVar, v);
+    _updateExpression.push(`${k} = ${valueVar}`);
+    Object.assign(_valuesMap, { [valueVar]: v });
+
+    i++;
   }
 
   const params = {
@@ -27,14 +29,17 @@ export const handler = async (event: any = {}): Promise<any> => {
     Key: {
       [PRIMARY_KEY]: requestedItemId
     },
-    UpdateExpression: _updateExpression,
+    UpdateExpression: 'set ' + _updateExpression.join(', '),
     ExpressionAttributeValues: _valuesMap
   };
+
+  console.log(params);
 
   try {
     const response = await db.update(params).promise();
     return { statusCode: 200, body: JSON.stringify(response.Item) };
   } catch (dbError) {
+    console.error(dbError);
     return { statusCode: 500, body: JSON.stringify(dbError) };
   }
 };

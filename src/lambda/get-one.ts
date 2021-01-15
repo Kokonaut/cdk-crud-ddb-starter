@@ -19,8 +19,12 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   try {
     const response = await db.get(params).promise();
+    if (!response.Item) {
+      return { statusCode: 404 }
+    }
     return { statusCode: 200, body: JSON.stringify(response.Item) };
   } catch (dbError) {
+    console.error(dbError);
     return { statusCode: 500, body: JSON.stringify(dbError) };
   }
 };

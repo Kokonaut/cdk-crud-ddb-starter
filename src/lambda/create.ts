@@ -33,6 +33,7 @@ export const handler = async (event: any = {}): Promise<any> => {
     await mapper.put(toSave);
     return { statusCode: 201, body: '' };
   } catch (dbError) {
+    console.error(dbError);
     const errorResponse = dbError.code === 'ValidationException' && dbError.message.includes('reserved keyword') ?
       DYNAMODB_EXECUTION_ERROR : RESERVED_RESPONSE;
     return { statusCode: 500, body: errorResponse };

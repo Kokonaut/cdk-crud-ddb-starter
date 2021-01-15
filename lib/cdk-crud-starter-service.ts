@@ -52,6 +52,8 @@ export class CdkCrudStarterService extends cdk.Construct {
     const singleItem = items.addResource('{id}');
     const getOneIntegration = new apigateway.LambdaIntegration(lambdaFunc);
     singleItem.addMethod('GET', getOneIntegration);
+    singleItem.addMethod('PUT', getOneIntegration);
+    singleItem.addMethod('DELETE', getOneIntegration);
 
     this.addCorsOptions(singleItem);
   }
