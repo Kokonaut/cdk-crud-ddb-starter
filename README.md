@@ -41,11 +41,14 @@ It's not necessary to define a schema with DDB, but is helpful for a structured 
 Setup is very simple. Assuming you already have an AWS account and credentials setup, then the process is as follows:
 
 * Clone repository
-* `npm install`
-* `chmod +X buildDeployPkg.sh`
-* `npm run build`
-* `cdk synth`
-* `cdk deploy`
+* cd into root of repo
+* ```
+npm install
+chmod +X buildDeployPkg.sh
+npm run build
+cdk synth
+cdk deploy
+```
 
 Your terminal will prompt you to review the CloudFormation resource changelist and confirm.
 
@@ -53,13 +56,17 @@ If all goes well, you should see a success message, the API Gateway URL under Ou
 
 ### Redeploy
 If just updating code in `src`, then only necessary steps are:
-* `npm run build`
-* `cdk deploy`
+```
+npm run build
+cdk deploy
+```
 
 If any changes are made that will change the CloudFormation stack code, then run:
-* `npm run build`
-* `cdk synth`
-* `cdk deploy`
+```
+npm run build
+cdk synth
+cdk deploy
+```
 
 ### Useful commands
 Here is a full list of useful commands
