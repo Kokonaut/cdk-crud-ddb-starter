@@ -1,0 +1,36 @@
+{
+  "name": "cdk-crud-starter",
+  "version": "0.1.0",
+  "bin": {
+    "cdk_crud_starter": "bin/cdk-crud-starter.js"
+  },
+  "scripts": {
+    "build": "tsc && ./buildDeployPkg.sh",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.54.0",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/jest": "^25.2.3",
+    "@types/node": "10.17.5",
+    "aws-cdk": "1.56.0",
+    "jest": "^25.5.0",
+    "ts-jest": "^25.3.1",
+    "ts-node": "^8.1.0",
+    "typescript": "~3.7.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "1.56.0",
+    "@aws-cdk/aws-dynamodb": "1.56.0",
+    "@aws-cdk/aws-lambda": "1.56.0",
+    "@aws-cdk/core": "1.56.0",
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
+    "@aws/dynamodb-data-marshaller": "^0.7.3",
+    "@types/uuid": "^8.0.0",
+    "source-map-support": "^0.5.16",
+    "uuid": "^8.3.0"
+  }
+}
