@@ -1,16 +1,22 @@
-const AWS = require('aws-sdk');
-const db = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = process.env.CONTACT_TABLE_NAME || '';
+import { DataMapper } from "@aws/dynamodb-data-mapper";
+import DynamoDB = require("aws-sdk/clients/dynamodb");
+import ContactDDBItem from "../db/contact-ddb-item";
+
 
 export const handler = async (): Promise<any> => {
 
-  const params = {
-    TableName: TABLE_NAME
-  };
+  const mapper = new DataMapper({
+    client: new DynamoDB()
+  });
 
   try {
-    const response = await db.scan(params).promise();
-    return { statusCode: 200, body: JSON.stringify(response.Items) };
+    // You would probably want some sort of pagination here, but I also
+    // highly recommend never performing a scan on DDB
+    let resultSet: ContactDDBItem[] = [];
+    for await (const item of mapper.scan(ContactDDBItem)) {
+      resultSet.push(item);
+    }
+    return { statusCode: 200, body: JSON.stringify(resultSet) };
   } catch (dbError) {
     console.error(dbError);
     return { statusCode: 500, body: JSON.stringify(dbError) };

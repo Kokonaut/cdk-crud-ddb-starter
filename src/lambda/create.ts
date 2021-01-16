@@ -19,7 +19,7 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   const mapper = new DataMapper({
     client: new DynamoDB()
-  })
+  });
 
   const toSave = Object.assign(new ContactDDBItem, {
     name: item.name,

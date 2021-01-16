@@ -1,7 +1,7 @@
-const AWS = require('aws-sdk');
-const db = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = process.env.CONTACT_TABLE_NAME || '';
-const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
+import { DataMapper } from "@aws/dynamodb-data-mapper";
+import DynamoDB = require("aws-sdk/clients/dynamodb");
+import ContactDDBItem from "../db/contact-ddb-item";
+
 
 export const handler = async (event: any = {}): Promise<any> => {
 
@@ -10,19 +10,16 @@ export const handler = async (event: any = {}): Promise<any> => {
     return { statusCode: 400, body: `Error: You are missing the path parameter id` };
   }
 
-  const params = {
-    TableName: TABLE_NAME,
-    Key: {
-      [PRIMARY_KEY]: requestedItemId
-    }
-  };
+  const mapper = new DataMapper({
+    client: new DynamoDB()
+  });
 
   try {
-    const response = await db.get(params).promise();
-    if (!response.Item) {
+    const response = await mapper.get(new ContactDDBItem().setPrimaryKey(requestedItemId));
+    if (!response) {
       return { statusCode: 404 }
     }
-    return { statusCode: 200, body: JSON.stringify(response.Item) };
+    return { statusCode: 200, body: JSON.stringify(response) };
   } catch (dbError) {
     console.error(dbError);
     return { statusCode: 500, body: JSON.stringify(dbError) };
